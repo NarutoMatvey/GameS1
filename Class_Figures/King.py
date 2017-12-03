@@ -8,8 +8,8 @@ class King(Figures):
         super().__init__("Король", line_item, color)
 
     def how_walks_figure(self, new_line_item):
-        ver = ord(self.line_item[0]) - ord(new_line_item[0])
-        hor = int(self.line_item[1]) - int(new_line_item[1])
+        hor = ord(self.line_item[0]) - ord(new_line_item[0])
+        ver = int(self.line_item[1]) - int(new_line_item[1])
         if ver < 0:
             ver *= -1
         if hor < 0:
