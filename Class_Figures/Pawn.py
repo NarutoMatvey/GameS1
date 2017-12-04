@@ -10,6 +10,12 @@ class Pawn(Figures):
     def how_walks_figure(self, new_line_item, kill=False):
         hor = ord(self.line_item[0]) - ord(new_line_item[0])
         ver = int(self.line_item[1]) - int(new_line_item[1])
+        if self.color == "Белый":
+            if ver > 0:
+                return False
+        else:
+            if ver < 0:
+                return False
         if ver < 0:
             ver *= -1
         if hor < 0:

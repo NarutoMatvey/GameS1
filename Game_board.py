@@ -1,4 +1,4 @@
-from Class_lib import *
+from Lib.MyLib.Class_lib import *
 
 
 class Game_board(object):
@@ -38,13 +38,15 @@ class Game_board(object):
             return "Клетка " + new_line_item + " не существует!"
 
         if self.board[line_item] == 0:
-            return "Клетка, которую вы выбрал \' " + line_item + "\' не содержит фигуры!"
+            return "Клетка, которую вы выбрал \'" + line_item + "\' не содержит фигуры!"
 
         if self.board[new_line_item] != 0 and self.board[new_line_item].color == self.board[line_item].color:
             return "Нельзя ходить в клетку " + new_line_item + ", там уже стоит ваша фигура!"
 
         if self.board[line_item].role_figures == "Пешка" and self.board[new_line_item] != 0:
             if self.board[line_item].how_walks_figure(new_line_item, True):
+                if self.board[new_line_item].role_figurse == "Король":
+                    return "Мат " + self.board[new_line_item].color
                 self.update_board(line_item, new_line_item, True)
                 return "Пешка успешно походила!"
             else:
@@ -52,6 +54,8 @@ class Game_board(object):
 
         if self.board[line_item].how_walks_figure(new_line_item):
             if self.board[new_line_item] != 0:
+                if self.board[new_line_item].role_figurse == "Король":
+                    return "Мат " + self.board[new_line_item].color
                 self.update_board(line_item, new_line_item, True)
             else:
                 self.update_board(line_item, new_line_item)
