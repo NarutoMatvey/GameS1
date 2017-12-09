@@ -11,7 +11,7 @@ class Game_board(object):
         for vertical in range(1, 9):
             if vertical == 3:
                 color = "Чёрный"
-            for horizontal in range(ord('a'), ord('h')):
+            for horizontal in range(ord('a'), ord('h')+1):
                 line_item = chr(horizontal) + str(vertical)
                 if vertical == 2 or vertical == 7:
                     self.board[line_item] = Pawn(line_item, color)
@@ -45,7 +45,11 @@ class Game_board(object):
 
         if self.board[line_item].role_figures == "Пешка" and self.board[new_line_item] != 0:
             if self.board[line_item].how_walks_figure(new_line_item, True):
-                if self.board[new_line_item].role_figurse == "Король":
+                global_prover_otvet = self.global_check()
+                if global_prover_otvet != 1:
+                    return global_prover_otvet
+                rol = self.board[new_line_item].info()['role']
+                if "Король" in rol:
                     return "Мат " + self.board[new_line_item].color
                 self.update_board(line_item, new_line_item, True)
                 return "Пешка успешно походила!"
@@ -53,8 +57,13 @@ class Game_board(object):
                 return "Пешка по такой траиктории не может ударить!"
 
         if self.board[line_item].how_walks_figure(new_line_item):
+            if self.board[line_item].role_figures != 'Конь':
+                global_prover_otvet = self.global_check(line_item, new_line_item)
+                if global_prover_otvet != 1:
+                    return global_prover_otvet
             if self.board[new_line_item] != 0:
-                if self.board[new_line_item].role_figurse == "Король":
+                rol = self.board[new_line_item].info()['role']
+                if "Король" in rol:
                     return "Мат " + self.board[new_line_item].color
                 self.update_board(line_item, new_line_item, True)
             else:
@@ -62,6 +71,47 @@ class Game_board(object):
             return self.board[new_line_item].role_figures + " успешно походил!"
         else:
             return self.board[line_item].role_figures + " по такой траиктории ходить не может!"
+
+    def global_check(self, line_item, new_line_item):
+        gor1, ver1, gor2, ver2 = line_item[0], line_item[1], new_line_item[0], new_line_item[1]
+        deltaGOR, deltaVER = 0, 0
+
+        if gor1 < gor2:
+            deltaGOR = 1
+        elif gor1 > gor2:
+            deltaGOR = -1
+
+        if ver1 < ver2:
+            deltaVER = 1
+        elif ver1 > ver2:
+            deltaVER = -1
+        i = chr(ord(gor1) + deltaGOR)
+        j = chr(ord(ver1) + deltaVER)
+        if i <= gor2 and j <= ver2:
+            while i < gor2 or j < ver2:
+                if self.board[i + j] != 0:
+                    return "На пути стоит фигура которую нельзя обойти!"
+                i = chr(ord(i) + deltaGOR)
+                j = chr(ord(j) + deltaVER)
+        elif i >= gor2 and j >= ver2:
+            while i > gor2 or j > ver2:
+                if self.board[i + j] != 0:
+                    return "На пути стоит фигура которую нельзя обойти!"
+                i = chr(ord(i) + deltaGOR)
+                j = chr(ord(j) + deltaVER)
+        elif i <= gor2 and j >= ver2:
+            while i < gor2 or j > ver2:
+                if self.board[i + j] != 0:
+                    return "На пути стоит фигура которую нельзя обойти!"
+                i = chr(ord(i) + deltaGOR)
+                j = chr(ord(j) + deltaVER)
+        elif i >= gor2 and j <= ver2:
+            while i > gor2 or j < ver2:
+                if self.board[i + j] != 0:
+                    return "На пути стоит фигура которую нельзя обойти!"
+                i = chr(ord(i) + deltaGOR)
+                j = chr(ord(j) + deltaVER)
+        return 1
 
     def update_board(self, line_item, new_line_item, kill=False):
         if kill:

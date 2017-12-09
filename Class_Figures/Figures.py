@@ -8,9 +8,9 @@ class Figures(object):
         self.role_figures = role_figures
 
     def info(self):
-        return {'cell': 'Клетка: ' + self.line_item,
-                'color': 'Цвет: ' + self.color,
-                'role': "Роль: " + self.role_figures}
+        return {'cell': self.line_item,
+                'color': self.color,
+                'role': self.role_figures}
 
     def update_line_item(self, line_item):
         self.line_item = line_item

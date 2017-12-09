@@ -4,11 +4,19 @@ import pickle
 
 def get_answer(sender):
     data = []
+    waiting_ratio = 0
     while True:
-        packet = sender.recv(1024)
-        if not packet:
-            break
-        data.append(packet)
+        try:
+            packet = sender.recv(1024)
+            data.append(packet)
+        except socket.error:
+            if data == [] and waiting_ratio < 5:
+                sender.setblocking(60)
+                waiting_ratio += 1
+                continue
+            else:
+                break
+        sender.setblocking(0)
     response = pickle.loads(b"".join(data))
     return response
 

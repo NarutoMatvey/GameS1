@@ -20,14 +20,15 @@ class Pawn(Figures):
             ver *= -1
         if hor < 0:
             hor *= -1
-
+        print(kill, ver, hor)
         if kill and ver == 1 and hor == 1:
             self.update_line_item(new_line_item)
             return True
-        elif ver == 1 and kill == 0:
+        elif ver == 1 and kill == 0 and hor == 0:
             self.update_line_item(new_line_item)
             return True
-        elif (self.line_item[1] == '2' or self.line_item[1] == '7') and ver == 2 and kill == False:
+        elif (self.line_item[1] == '2' or self.line_item[1] == '7') and ver == 2 and kill == False and hor == 0:
             self.update_line_item(new_line_item)
             return True
+
         return False
